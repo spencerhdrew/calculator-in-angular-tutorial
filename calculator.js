@@ -29,8 +29,12 @@ function Ctrl($scope) {
     // Constants
     var ADD = "adding";
     var SUBTRACT = "subtracting";
+    var MULTIPLY = "multiplies";
+    var DIVIDE = "divides";
     var ADD_TOKEN = "+";
     var SUBTRACT_TOKEN = "-";
+    var MULTIPLY_TOKEN = "*";
+    var DIVIDE_TOKEN = "/";  //Left off right here modifying code 9/10/16 12:18am
 
     /*
      * Runs every time a number button is clicked.
@@ -98,7 +102,56 @@ function Ctrl($scope) {
         $scope.newNumber = true;
         $scope.pendingValue = null;
     };
-
+    /*
+     * Runs every time the add button is clicked.
+     * If a number has been entered before the add
+     * button was clicked we set the number as a pendingValue,
+     * set ADD as a pendingOperation, and set the token.
+     * If no number was entered but an existing calculated
+     * number is in the output display we add the last added
+     * value on to the total again.
+     */
+    $scope.multiply = function () {
+        if ($scope.pendingValue) {
+            if ($scope.runningTotal && $scope.pendingOperation == MULTIPLY) {
+                $scope.runningTotal *= $scope.pendingValue;
+            } else if ($scope.runningTotal && $scope.pendingOperation == DIVIDE) {
+                $scope.runningTotal /= $scope.pendingValue;
+            } else {
+                $scope.runningTotal = $scope.pendingValue;
+            }
+        }
+        setOperationToken(MULTIPLY);
+        setOutput(String($scope.runningTotal));
+        $scope.pendingOperation = MULTIPLY;
+        $scope.newNumber = true;
+        $scope.pendingValue = null;
+      };
+        /*
+         * Runs every time the add button is clicked.
+         * If a number has been entered before the add
+         * button was clicked we set the number as a pendingValue,
+         * set ADD as a pendingOperation, and set the token.
+         * If no number was entered but an existing calculated
+         * number is in the output display we add the last added
+         * value on to the total again.
+         */
+        $scope.divide = function () {
+            if ($scope.pendingValue) {
+                if ($scope.runningTotal && $scope.pendingOperation == DIVIDE) {
+                    $scope.runningTotal /= $scope.pendingValue;
+                } else if ($scope.runningTotal && $scope.pendingOperation == MULTIPLY) {
+                    $scope.runningTotal *= $scope.pendingValue;
+                } else {
+                    $scope.runningTotal = $scope.pendingValue;
+                }
+            }
+            setOperationToken(DIVIDE);
+            setOutput(String($scope.runningTotal));
+            $scope.pendingOperation = DIVIDE;
+            $scope.newNumber = true;
+            $scope.pendingValue = null;
+        };
     /*
      * Runs when the equals (=) button is clicked.
      * If a number has been entered before the equals
@@ -120,6 +173,13 @@ function Ctrl($scope) {
         } else if ($scope.pendingOperation == SUBTRACT) {
             $scope.runningTotal -= $scope.pendingValue;
             $scope.lastOperation = SUBTRACT;
+          } else if ($scope.pendingOperation == MULTIPLY) {
+              $scope.runningTotal *= $scope.pendingValue;
+              $scope.lastOperation = MULTIPLY;
+            } else if ($scope.pendingOperation == DIVIDE) {
+                $scope.runningTotal /= $scope.pendingValue;
+                $scope.lastOperation = DIVIDE;
+
         } else {
             if ($scope.lastOperation) {
                 if ($scope.lastOperation == ADD) {
@@ -134,10 +194,25 @@ function Ctrl($scope) {
                     } else {
                         $scope.runningTotal = 0;
                     }
+
+              } else if ($scope.lastOperation == MULTIPLY) {
+                  if ($scope.runningTotal) {
+                      $scope.runningTotal *= $scope.lastValue;
+                  } else {
+                      $scope.runningTotal = 0;
+                  }
+
+            } else if ($scope.lastOperation == DIVIDE) {
+                if ($scope.runningTotal) {
+                    $scope.runningTotal /= $scope.lastValue;
+                } else {
+                    $scope.runningTotal = 0;
                 }
+
             } else {
                 $scope.runningTotal = 0;
             }
+          }
         }
         setOutput($scope.runningTotal);
         setOperationToken();
@@ -174,7 +249,12 @@ function Ctrl($scope) {
             $scope.operationToken = ADD_TOKEN;
         } else if (operation == SUBTRACT) {
             $scope.operationToken = SUBTRACT_TOKEN;
-        } else {
+        } else if (operation == MULTIPLY) {
+            $scope.operationToken = MULTIPLY_TOKEN;
+        } else if (operation == DIVIDE) {
+            $scope.operationToken = DIVIDE_TOKEN;
+        }
+        else {
             $scope.operationToken = "";
         }
     };
