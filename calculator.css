@@ -3,7 +3,7 @@
 }
 .thinborder {
     border:1px solid #ccc;
-    width:206px;
+    width:175px;
     height:60px;
     background:black;
 }
@@ -18,7 +18,7 @@
 }
 .clearbutton {
     width:100px;
-    background-color:green;
+    background-color:#304;
     color:white;
 }
 .output {
@@ -30,9 +30,28 @@
     font-size:14px;
 }
 .calcbody {
-    background:#306;
-    width:210px;
+    background:#143254;
+    width:175px;
     padding:10px;
     box-shadow: 5px 5px 5px #888888;
     border-radius:12px;
 }
+#button0 {
+  position: relative;
+  left: 50%;
+}
+
+#buttonDivide {
+  position: relative;
+  left: 50%;
+}
+
+#buttonEquals {
+  position: relative;
+  left: 5%;
+  background: lightblue;
+}
+#mod-text {
+  padding:0;
+}
+
